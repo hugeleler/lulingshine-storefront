@@ -5,6 +5,10 @@ import { getRegion, listRegions } from "@lib/data/regions"
 import ProductTemplate from "@modules/products/templates"
 import { HttpTypes } from "@medusajs/types"
 
+// 💡 關鍵針腳：強行打穿 Next.js 靜態緩存！
+// 設置為 0 表示每次訪問商品詳情頁時，Node.js 都必須重新實時渲染最新修改的前端代碼！
+export const revalidate = 0
+
 type Props = {
   params: Promise<{ countryCode: string; handle: string }>
   searchParams: Promise<{ v_id?: string }>
@@ -69,6 +73,8 @@ function getImagesForVariant(
   return product.images!.filter((i) => imageIdsMap.has(i.id))
 }
 
+// 💡 100% 物理超度 " | Medusa Store" 標題後綴
+// 讓瀏覽器標籤頁上的名字和甘木道一樣高冷乾淨
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params
   const { handle } = params
@@ -88,11 +94,11 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 
   return {
-    title: `${product.title} | Medusa Store`,
-    description: `${product.title}`,
+    title: `${product.title}【甘木道】`, // 👈 對齊原網頁的優雅後綴標籤
+    description: `${product.description || product.title}`,
     openGraph: {
-      title: `${product.title} | Medusa Store`,
-      description: `${product.title}`,
+      title: `${product.title}`,
+      description: `${product.description || product.title}`,
       images: product.thumbnail ? [product.thumbnail] : [],
     },
   }

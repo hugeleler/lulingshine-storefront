@@ -2,7 +2,6 @@ import React, { Suspense } from "react"
 
 import ImageGallery from "@modules/products/components/image-gallery"
 import ProductActions from "@modules/products/components/product-actions"
-import ProductOnboardingCta from "@modules/products/components/product-onboarding-cta"
 import ProductTabs from "@modules/products/components/product-tabs"
 import RelatedProducts from "@modules/products/components/related-products"
 import ProductInfo from "@modules/products/templates/product-info"
@@ -31,34 +30,54 @@ const ProductTemplate: React.FC<ProductTemplateProps> = ({
 
   return (
     <>
+      {/* 💡 核心改造：最大寬度對齊首頁 1440px，去掉原本居中容器的硬邊框
+        使用 grid-cols-1 lg:grid-cols-12 實現完美的美術館雙欄佈局
+      */}
       <div
-        className="content-container  flex flex-col small:flex-row small:items-start py-6 relative"
+        className="w-full max-w-[1440px] mx-auto px-6 md:px-12 py-12 flex flex-col lg:grid lg:grid-cols-12 gap-y-12 lg:gap-x-20 relative bg-white"
         data-testid="product-container"
       >
-        <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-6">
-          <ProductInfo product={product} />
-          <ProductTabs product={product} />
-        </div>
-        <div className="block w-full relative">
+        
+        {/* ================= 左側欄：巨幅藝術大圖展廳 (7/12 寬度) ================= */}
+        <div className="w-full lg:col-span-7 relative">
           <ImageGallery images={images} />
         </div>
-        <div className="flex flex-col small:sticky small:top-48 small:py-0 small:max-w-[300px] w-full py-8 gap-y-12">
-          <ProductOnboardingCta />
-          <Suspense
-            fallback={
-              <ProductActions
-                disabled={true}
-                product={product}
-                region={region}
-              />
-            }
-          >
-            <ProductActionsWrapper id={product.id} region={region} />
-          </Suspense>
+
+        {/* ================= 右側欄：極簡文字購買控制台 (5/12 寬度) ================= */}
+        {/* 💡 開啟 sticky，當左邊滑動放大欣賞瓷器時，右邊的購買面板優雅固定在頂部 */}
+        <div className="w-full lg:col-span-5 flex flex-col lg:sticky lg:top-32 h-fit gap-y-10">
+          
+          {/* 1. 商品品名與價格區塊 */}
+          <ProductInfo product={product} />
+          
+          {/* 2. 購買按鈕與變體選擇區塊 */}
+          <div className="w-full">
+            <Suspense
+              fallback={
+                <ProductActions
+                  disabled={true}
+                  product={product}
+                  region={region}
+                />
+              }
+            >
+              <ProductActionsWrapper id={product.id} region={region} />
+            </Suspense>
+          </div>
+
+          {/* 3. 工藝引言與詳細參數下拉（比如尺寸、重量、材質說明） */}
+          <div className="w-full border-t border-gray-100 pt-6">
+            <ProductTabs product={product} />
+          </div>
+
         </div>
+
       </div>
+
+      {/* ================= 底部：相關推薦區塊 ================= */}
+      {/* 💡 增加大留白過渡，去掉雜亂線條，讓推薦看起來像畫廊的下一展廳 */}
       <div
-        className="content-container my-16 small:my-32"
+        className="w-full max-w-[1440px] mx-auto px-6 md:px-12 mt-32 mb-16 border-t border-gray-50 pt-16"
         data-testid="related-products-container"
       >
         <Suspense fallback={<SkeletonRelatedProducts />}>
