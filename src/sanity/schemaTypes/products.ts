@@ -1,9 +1,9 @@
-// 📁 路徑：src/sanity/schemaTypes/pageContent.ts
+// 📁 路徑：src/sanity/schemas/products.ts
 import { defineField, defineType } from 'sanity'
 
 export default defineType({
-  name: 'pageContent',
-  title: '甘木道 · 頁面文化敘事大腦',
+  name: 'pageContent', // 保持核心 name 為 pageContent，確保自動化同步腳本能精準對賬
+  title: '2. 產品 (Products)', 
   type: 'document',
   fields: [
     defineField({
@@ -61,7 +61,7 @@ export default defineType({
     // 💬 【大師禪意對談】
     defineField({
       name: 'dialogue',
-      title: '甘木道 · 店主與大師禪意對談紀錄',
+      title: '廬陵昱西 · 店主與大師禪意對談紀錄',
       description: '像蓋樓一樣，一行一行無限添加店主與大師一問一答的深度對話。',
       type: 'array',
       hidden: ({ document }) => {
@@ -80,7 +80,7 @@ export default defineType({
               type: 'string',
               options: {
                 list: [
-                  { title: '甘木道 店主（西村一昧）', value: 'shopkeeper' },
+                  { title: '廬陵昱西 店主', value: 'shopkeeper' },
                   { title: '大師本人', value: 'artist' },
                 ],
                 layout: 'radio',
@@ -100,7 +100,7 @@ export default defineType({
             select: { speaker: 'speaker', zh: 'content.zh', ja: 'content.ja' },
             prepare(selection) {
               const { speaker, zh, ja } = selection
-              const role = speaker === 'shopkeeper' ? '【店主西村】' : '【大師】'
+              const role = speaker === 'shopkeeper' ? '【店主】' : '【大師】'
               return { title: `${role} ${zh || ja || '未填寫文本'}` }
             },
           },

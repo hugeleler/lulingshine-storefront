@@ -1,5 +1,19 @@
 // 📁 路徑：src/sanity/schemaTypes/index.ts
-import pageContent from './pageContent'
+import home from './home'
+import products from './products'
+import worksByArtist from './worksByArtist'
+import artistDialogue from './artistDialogue'
+import blog from './blog'
+import buyingGuide from './buyingGuide'
+import inquiry from './inquiry'
 
-// 💡 砍掉所有亂七八糟的散裝文件，全面收束為你最新優化的歸一化結構
-export const schemaTypes = [pageContent]
+// 🔒 這裡只老老實實保留 1 到 7 號的純數據結構
+export const schemaTypes = [
+  home,
+  products,
+  worksByArtist,
+  artistDialogue,
+  blog,
+  buyingGuide,
+  inquiry
+]
