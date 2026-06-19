@@ -60,7 +60,6 @@ export async function GET() {
       const isArtist = handle.includes('tom') || handle.includes('tagai') || handle.includes('artist') || handle.includes('ouyang')
       
       // 🚀 【核心進化】：使用 createOrReplace 進行主鍵鎖定更新
-      // 若 ID 不存在則創建；若 ID 已存在，則將 Medusa 最新修改的名稱等參數強行覆蓋更新，杜絕髒數據！
       await sanityWriteClient.createOrReplace({
         _type: 'pageContent',
         _id: targetId, // 🔒 物理主鍵鎖定
@@ -74,7 +73,8 @@ export async function GET() {
       processedCount++
     }
 
-    syncStatusMessage = `甘木道自動對賬圓滿成功！已動態對齊/覆蓋更新 ${processedCount} 個分類的最新數據參數。`
+    // 🎯 品牌正名回饋訊息
+    syncStatusMessage = `廬陵昱西自動對賬圓滿成功！已動態對齊/覆蓋更新 ${processedCount} 個分類的最新數據參數。`
 
   } catch (error: any) {
     isSuccess = false;
@@ -96,7 +96,7 @@ export async function GET() {
     <html lang="zh-HK">
     <head>
       <meta charset="UTF-8">
-      <title>甘木道資料庫 · Medusa 分類 ➔ Sanity 頁面對賬面板</title>
+      <title>廬陵昱西資料庫 · Medusa 分類 ➔ Sanity 頁面對賬面板</title>
       <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f7f6; color: #333; margin: 0; padding: 20px; }
         .container { max-width: 1300px; margin: 0 auto; }
@@ -120,7 +120,7 @@ export async function GET() {
     <body>
       <div class="container">
         <header>
-          <h1>小雞雞自動化對賬終端 v1.5 (智慧覆蓋版)</h1>
+          <h1>廬陵昱西自動化對賬終端 v1.5 (智慧覆蓋版)</h1>
           <p style="margin: 5px 0 0 0; color: #999;">Medusa 產品分類 (Product Categories) ➔ Sanity 頁面內容 (pageContent) 雙向動態覆蓋同步</p>
           <div class="status-box">最新同步回饋：${syncStatusMessage}</div>
         </header>
