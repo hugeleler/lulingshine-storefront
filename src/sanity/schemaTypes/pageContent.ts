@@ -11,7 +11,7 @@ export default defineType({
       title: '精準對齊 Medusa 的分類 Handle',
       type: 'string',
       description: '【暗號鎖定】由 Next.js 自動化腳本從 Medusa 唯讀同步過來，請勿隨意修改，確保對賬。',
-      readOnly: true, // 🔒 鎖死它，人肉不得修改，防止對不上賬
+      readOnly: true, 
     }),
     defineField({
       name: 'pageType',
@@ -58,13 +58,16 @@ export default defineType({
       ],
     }),
     
-    // 💬 條件加載：【大師禪意對談】（只有當 pageType == 'artist' 時才在後台解鎖解凍！）
+    // 💬 【大師禪意對談】
     defineField({
       name: 'dialogue',
       title: '甘木道 · 店主與大師禪意對談紀錄',
       description: '像蓋樓一樣，一行一行無限添加店主與大師一問一答的深度對話。',
       type: 'array',
-      hidden: ({ document }) => document?.pageType !== 'artist', // 💡 天才開關：不是大師頁自動隱藏，絕不眼亂！
+      hidden: ({ document }) => {
+        if (!document?.pageType) return false; 
+        return document.pageType !== 'artist';
+      },
       of: [
         {
           type: 'object',
@@ -105,13 +108,16 @@ export default defineType({
       ],
     }),
 
-    // 🌟 條件加載：【Why Choose Us 四大優勢】（只有當 pageType == 'collection' 時才顯示！）
+    // 🌟 【Why Choose Us 四大優勢】
     defineField({
       name: 'features',
       title: '核心優勢特點列表 (Why Choose Our Handcrafted Bowls)',
       description: '完美對應網頁上半部分用來渲染四大宣傳板塊的陣列。',
       type: 'array',
-      hidden: ({ document }) => document?.pageType !== 'collection', // 💡 天才開關：大師頁自動隱藏！
+      hidden: ({ document }) => {
+        if (!document?.pageType) return false;
+        return document.pageType !== 'collection';
+      },
       of: [
         {
           type: 'object',
@@ -150,10 +156,11 @@ export default defineType({
   preview: {
     select: { handle: 'categoryHandle', type: 'pageType', titleZh: 'title.zh' },
     prepare(selection) {
-      const { handle, type, titleZh } = selection
-      const emoji = type === 'artist' ? '👨‍🎨' : '🍵'
+      const { handle, type, titleZh } = selection || {}
+      const currentType = type || 'unknown'
+      const emoji = currentType === 'artist' ? '👨‍🎨' : currentType === 'collection' ? '🍵' : '⏳'
       return {
-        title: `${emoji} 暗號: ${handle}`,
+        title: `${emoji} 暗號: ${handle || '新條目建立中...'}`,
         subtitle: titleZh ? `已填中文名: ${titleZh}` : '⏳ 故事待注入...',
       }
     },
