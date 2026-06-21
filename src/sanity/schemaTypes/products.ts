@@ -1,8 +1,8 @@
-// 📁 路徑：src/sanity/schemas/products.ts
+// 📁 路徑：src/sanity/schemaTypes/products.ts
 import { defineField, defineType } from 'sanity'
 
 export default defineType({
-  name: 'pageContent', // 保持核心 name 為 pageContent，確保自動化同步腳本能精準對賬
+  name: 'pageContent', 
   title: '2. 產品 (Products)', 
   type: 'document',
   fields: [
@@ -10,7 +10,7 @@ export default defineType({
       name: 'categoryHandle',
       title: '精準對齊 Medusa 的分類 Handle',
       type: 'string',
-      description: '【暗號鎖定】由 Next.js 自動化腳本從 Medusa 唯讀同步過來，請勿隨意修改，確保對賬。',
+      description: '【暗號鎖定】由 Next.js 自動化腳本唯讀同步，確保對賬。',
       readOnly: true, 
     }),
     defineField({
@@ -27,52 +27,42 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'layoutStyle',
+      title: '🎨 產品展廳視覺美工模板',
+      type: 'string',
+      options: {
+        list: [
+          { title: '🍵 1.0 禪意黑瓷風 (Zen Dark Ceramic)', value: 'product_zen' },
+          { title: '🏛️ 1.0 明亮極簡風 (Minimalist White)', value: 'product_clean' },
+          { title: '🎄 2026 節日策展風 (Holiday Curated)', value: 'product_holiday' }
+        ]
+      },
+      initialValue: 'product_zen'
+    }),
+    defineField({
       name: 'title',
-      title: '網頁主標題 (國際化多語言)',
-      type: 'object',
-      fields: [
-        { name: 'en', title: '英文標題 (如: Bowl Matcha)', type: 'string' },
-        { name: 'zh', title: '繁體中文標題 (如: 抹茶茶碗)', type: 'string' },
-        { name: 'ja', title: '日文標題 (如: 抹茶碗の新作)', type: 'string' },
-      ],
+      title: '網頁主標題 (五國語言)',
+      type: 'localizedString',
     }),
     defineField({
       name: 'subtitle',
-      title: '網頁副標題 / 宣傳導語 (多語言)',
-      type: 'object',
-      fields: [
-        { name: 'en', title: '英文副標題', type: 'string' },
-        { name: 'zh', title: '繁體中文副標題', type: 'string' },
-        { name: 'ja', title: '日文副標題', type: 'string' },
-      ],
+      title: '網頁副標題 / 宣傳導語 (五國語言)',
+      type: 'localizedString',
     }),
     defineField({
       name: 'description',
-      title: '品牌核心故事 / 大師生平長文 (多語言)',
-      description: '承載極具奢華調性與禪意的小說級別品牌敘事。',
-      type: 'object',
-      fields: [
-        { name: 'en', title: '英文描述長文', type: 'text' },
-        { name: 'zh', title: '繁體中文描述長文', type: 'text' },
-        { name: 'ja', title: '日文描述長文', type: 'text' },
-      ],
+      title: '品牌核心故事 / 大師生平長文 (五國語言)',
+      type: 'localizedString',
     }),
-    
-    // 💬 【大師禪意對談】
     defineField({
       name: 'dialogue',
       title: '廬陵昱西 · 店主與大師禪意對談紀錄',
-      description: '像蓋樓一樣，一行一行無限添加店主與大師一問一答的深度對話。',
       type: 'array',
-      hidden: ({ document }) => {
-        if (!document?.pageType) return false; 
-        return document.pageType !== 'artist';
-      },
+      hidden: ({ document }) => document?.pageType !== 'artist',
       of: [
         {
           type: 'object',
           name: 'dialogueLine',
-          title: '對話行',
           fields: [
             {
               name: 'speaker',
@@ -88,16 +78,12 @@ export default defineType({
             },
             {
               name: 'content',
-              title: '對話文本 (多語言)',
-              type: 'object',
-              fields: [
-                { name: 'zh', title: '繁體中文', type: 'text' },
-                { name: 'ja', title: '日文', type: 'text' },
-              ],
+              title: '對話文本 (五國語言)',
+              type: 'localizedString',
             },
           ],
           preview: {
-            select: { speaker: 'speaker', zh: 'content.zh', ja: 'content.ja' },
+            select: { speaker: 'speaker', zh: 'content.zh_HK', ja: 'content.ja' },
             prepare(selection) {
               const { speaker, zh, ja } = selection
               const role = speaker === 'shopkeeper' ? '【店主】' : '【大師】'
@@ -107,61 +93,35 @@ export default defineType({
         },
       ],
     }),
-
-    // 🌟 【Why Choose Us 四大優勢】
     defineField({
       name: 'features',
-      title: '核心優勢特點列表 (Why Choose Our Handcrafted Bowls)',
-      description: '完美對應網頁上半部分用來渲染四大宣傳板塊的陣列。',
+      title: '核心優勢特點列表',
       type: 'array',
-      hidden: ({ document }) => {
-        if (!document?.pageType) return false;
-        return document.pageType !== 'collection';
-      },
+      hidden: ({ document }) => document?.pageType !== 'collection',
       of: [
         {
           type: 'object',
           name: 'featureItem',
           fields: [
-            {
-              name: 'featureTitle',
-              title: '特點小標題 (多語言)',
-              type: 'object',
-              fields: [
-                { name: 'en', title: '英文小標題', type: 'string' },
-                { name: 'zh', title: '繁體中文小標題', type: 'string' },
-              ],
-            },
-            {
-              name: 'featureDesc',
-              title: '特點細節描述 (多語言)',
-              type: 'object',
-              fields: [
-                { name: 'en', title: '英文細節', type: 'text' },
-                { name: 'zh', title: '繁體中文細節', type: 'text' },
-              ],
-            },
+            { name: 'featureTitle', title: '特點小標題 (五國語言)', type: 'localizedString' },
+            { name: 'featureDesc', title: '特點細節描述 (五國語言)', type: 'localizedString' },
           ],
           preview: {
-            select: { titleZh: 'featureTitle.zh', titleEn: 'featureTitle.en' },
-            prepare(selection) {
-              const { titleZh, titleEn } = selection
-              return { title: titleZh || titleEn || '未命名優勢特點' }
-            },
+            select: { title: 'featureTitle.zh_HK' },
+            prepare({ title }) { return { title: title || '未命名優勢特點' } },
           },
         },
       ],
     }),
   ],
   preview: {
-    select: { handle: 'categoryHandle', type: 'pageType', titleZh: 'title.zh' },
+    select: { handle: 'categoryHandle', type: 'pageType', titleZh: 'title.zh_HK' },
     prepare(selection) {
       const { handle, type, titleZh } = selection || {}
-      const currentType = type || 'unknown'
-      const emoji = currentType === 'artist' ? '👨‍🎨' : currentType === 'collection' ? '🍵' : '⏳'
+      const emoji = type === 'artist' ? '👨‍🎨' : type === 'collection' ? '🍵' : '⏳'
       return {
         title: `${emoji} 暗號: ${handle || '新條目建立中...'}`,
-        subtitle: titleZh ? `已填中文名: ${titleZh}` : '⏳ 故事待注入...',
+        subtitle: titleZh ? `已填繁中名: ${titleZh}` : '⏳ 故事待注入...',
       }
     },
   },

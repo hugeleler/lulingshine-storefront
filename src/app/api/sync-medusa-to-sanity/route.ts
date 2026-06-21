@@ -6,7 +6,7 @@ import { createClient } from '@sanity/client'
 const sanityWriteClient = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "qdbzil11",
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
-  apiVersion: '2026-06-17',
+  apiVersion: '2026-06-20', // 鎖定最新對齊時間線
   token: (process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_TOKEN || process.env.SANITY_AUTH_TOKEN)?.replace(/['"]/g, ''), // 🔒 安全清洗引號
   useCdn: false, // 寫入和最新對賬必須關閉 CDN
 })
@@ -49,32 +49,36 @@ export async function GET() {
 
     // ---- 第二部分：讀取與智慧寫入/更新 Sanity 數據庫 ----
     for (const category of medusaCategories) {
-      const handle = category.handle // 例如 "matcha-bowls" 或 中文的 "杯子"
+      const handle = category.handle 
       const name = category.name
 
-      // 🛡️ 【關鍵防禦線】：Sanity _id 不支援中文。
+      // 🛡️ 【關鍵防禦線】：Sanity _id 不支援中文與特殊符號
       const safeIdSuffix = encodeURIComponent(handle).replace(/%/g, '_')
       const targetId = `page-content-${safeIdSuffix}`
 
-      // 🧠 智慧型判斷大師屬性（判斷是否為藝術家）
-      const isArtist = handle.includes('tom') || handle.includes('tagai') || handle.includes('artist') || handle.includes('ouyang')
+      // 🧠 配合最高憲法：只要 Handle 是 art- 開頭，即判定為大師藝術家頁面
+      const isArtist = handle.startsWith('art-')
       
-      // 🚀 【核心進化】：使用 createOrReplace 進行主鍵鎖定更新
+      // 🚀 【終極對齊】：完美契合您的 localizedString.ts 定義！
+      // 繁體中文精準寫入 zh_HK，簡體中文精準寫入 zh_CN！
       await sanityWriteClient.createOrReplace({
         _type: 'pageContent',
-        _id: targetId, // 🔒 物理主鍵鎖定
+        _id: targetId, 
         categoryHandle: handle, // 保留純淨的原始 Handle，確保前台對賬無誤
         pageType: isArtist ? 'artist' : 'collection',
         title: {
-          zh: name, // Medusa 分類名稱若有變更，此處會自動更新覆蓋
-          en: handle.replace('-', ' ').toUpperCase(),
+          zh_HK: name, // ✅ 繁體中文 (TC) 各歸各位！
+          zh_CN: name, // ✅ 簡體中文 (SC) 各歸各位！
+          en: handle.toUpperCase().replace(/-/g, ' '), // 英文 (EN)
+          ja: "", // 日文 (JA) 留空等待人工策展
+          ko: ""  // 韓文 (KO) 留空等待人工策展
         }
       })
       processedCount++
     }
 
     // 🎯 品牌正名回饋訊息
-    syncStatusMessage = `廬陵昱西自動對賬圓滿成功！已動態對齊/覆蓋更新 ${processedCount} 個分類的最新數據參數。`
+    syncStatusMessage = `廬陵昱西自動對賬圓滿成功！已精準對齊 zh_HK/zh_CN 並覆蓋更新 ${processedCount} 個分類。`
 
   } catch (error: any) {
     isSuccess = false;
@@ -120,7 +124,7 @@ export async function GET() {
     <body>
       <div class="container">
         <header>
-          <h1>廬陵昱西自動化對賬終端 v1.5 (智慧覆蓋版)</h1>
+          <h1>廬陵昱西自動化對賬終端 v3.0 (zh_HK 香港精準版)</h1>
           <p style="margin: 5px 0 0 0; color: #999;">Medusa 產品分類 (Product Categories) ➔ Sanity 頁面內容 (pageContent) 雙向動態覆蓋同步</p>
           <div class="status-box">最新同步回饋：${syncStatusMessage}</div>
         </header>
@@ -154,7 +158,7 @@ export async function GET() {
             <table>
               <thead>
                 <tr>
-                  <th>Sanity 標題 (zh/en)</th>
+                  <th>Sanity 標題 (zh_HK / zh_CN / en)</th>
                   <th>原始 Handle / 類型</th>
                   <th>Sanity 文檔 ID (_id)</th>
                 </tr>
@@ -162,10 +166,12 @@ export async function GET() {
               <tbody>
                 ${sanityPageContents.map(p => {
                   const isArtist = p.pageType === 'artist';
+                  // 配合您的 Schema 結構渲染對賬面板
+                  const displayName = p.title?.zh_HK || p.title?.zh_CN || '無中文名';
                   return `
                     <tr>
                       <td>
-                        <strong>${p.title?.zh || '無中文名'}</strong>
+                        <strong>${displayName}</strong>
                         <span style="display:block; color:#666; font-size:12px;">${p.title?.en || 'NO EN TITLE'}</span>
                       </td>
                       <td>
