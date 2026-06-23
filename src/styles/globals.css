@@ -1,4 +1,4 @@
-/* 📁 路徑：src/styles/ 內的原有樣式文件 */
+/* 📁 路徑：src/styles/globals.css */
 /* 👑 注入天木堂靈魂：引入高奢雕刻感 Cinzel 體與古典繁體 Noto Serif HK 襯線體 */
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Noto+Serif+HK:wght@300;400;500&display=swap');
 
@@ -26,6 +26,19 @@
   }
   .luxury-tracking-sm {
     letter-spacing: 0.15em;
+  }
+
+  /* 🛡️ 支付圖標強鎖定：確保自動注入的圖標嚴格限制在 38x24 像素並平鋪排列 */
+  .payment-icons-lock {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    justify-content: flex-end !important;
+  }
+  .payment-icons-lock li {
+    width: 46px !important;
+    height: 30px !important;
+    flex-shrink: 0 !important;
   }
 
   /* ⬇️ 以下完美保留您原有的 utilities 配置 */
