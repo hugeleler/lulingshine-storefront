@@ -1,8 +1,34 @@
+/* 📁 路徑：src/styles/ 內的原有樣式文件 */
+/* 👑 注入天木堂靈魂：引入高奢雕刻感 Cinzel 體與古典繁體 Noto Serif HK 襯線體 */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Noto+Serif+HK:wght@300;400;500&display=swap');
+
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+@layer base {
+  body {
+    /* 💡 天木堂標誌性的博物館展廳級「微醺暖白」底色，比刺眼的純白更有骨董器物感 */
+    background-color: #faf9f6; 
+    color: #111111;
+    
+    /* 👑 優先使用我們剛引入的高奢字體體系 */
+    font-family: "Cinzel", "Noto Serif HK", "Garamond", serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
 @layer utilities {
+  /* 🪄 專屬特調：拉寬、充滿呼吸感的奢侈品字距 */
+  .luxury-tracking {
+    letter-spacing: 0.25em;
+  }
+  .luxury-tracking-sm {
+    letter-spacing: 0.15em;
+  }
+
+  /* ⬇️ 以下完美保留您原有的 utilities 配置 */
   /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
@@ -50,6 +76,7 @@
 }
 
 @layer components {
+  /* ⬇️ 完美保留您原有的 components 字號與容器配置 */
   .content-container {
     @apply max-w-[1440px] w-full mx-auto px-6;
   }
@@ -109,4 +136,16 @@
   .text-3xl-semi {
     @apply text-[32px] leading-[44px] font-semibold;
   }
+}
+
+/* 🟢 再順手幫老大加上優雅的細微滾動條，幹掉原生大灰條 */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #faf9f6;
+}
+::-webkit-scrollbar-thumb {
+  background: #e5e5e0;
+  border-radius: 2px;
 }
