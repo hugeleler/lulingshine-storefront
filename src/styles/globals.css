@@ -28,7 +28,7 @@
     letter-spacing: 0.15em;
   }
 
-  /* 🛡️ 支付圖標強鎖定：確保自動注入的圖標嚴格限制在 38x24 像素並平鋪排列 */
+  /* 🛡️ 支付圖標強鎖定：完美同步放大後的 46x30 像素，確保多設備橫向平鋪、絕不壓縮變形 */
   .payment-icons-lock {
     display: flex !important;
     flex-wrap: wrap !important;
