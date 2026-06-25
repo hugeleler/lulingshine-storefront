@@ -1,0 +1,439 @@
+.
+├── check-env-variables.js
+├── env 2.textClipping
+├── LICENSE
+├── next-env.d.ts
+├── next-sitemap.js
+├── next.config.js
+├── nextjs_frontend_structure.txt
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── public
+│   ├── favicon.ico
+│   ├── home-hero_.jpg
+│   ├── home-hero.jpg
+│   └── payments
+│       ├── amex.svg
+│       ├── apple-pay.svg
+│       ├── google-pay.svg
+│       ├── jcb.svg
+│       ├── mastercard.svg
+│       ├── paypal.svg
+│       ├── usdt.svg
+│       └── visa.svg
+├── README.md
+├── sanity.config.ts
+├── src
+│   ├── app
+│   │   ├── [countryCode]
+│   │   │   ├── (checkout)
+│   │   │   │   ├── checkout
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── layout.tsx
+│   │   │   │   └── not-found.tsx
+│   │   │   ├── (main)
+│   │   │   │   ├── account
+│   │   │   │   │   ├── @dashboard
+│   │   │   │   │   │   ├── addresses
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   │   ├── orders
+│   │   │   │   │   │   │   ├── details
+│   │   │   │   │   │   │   │   └── [id]
+│   │   │   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   │   ├── page.tsx
+│   │   │   │   │   │   └── profile
+│   │   │   │   │   │       └── page.tsx
+│   │   │   │   │   ├── @login
+│   │   │   │   │   │   └── page.tsx
+│   │   │   │   │   ├── layout.tsx
+│   │   │   │   │   └── loading.tsx
+│   │   │   │   ├── cart
+│   │   │   │   │   ├── loading.tsx
+│   │   │   │   │   ├── not-found.tsx
+│   │   │   │   │   └── page.tsx
+│   │   │   │   ├── categories
+│   │   │   │   │   └── [...category]
+│   │   │   │   │       └── page.tsx
+│   │   │   │   ├── collections
+│   │   │   │   │   └── [handle]
+│   │   │   │   │       └── page.tsx
+│   │   │   │   ├── layout.tsx
+│   │   │   │   ├── not-found.tsx
+│   │   │   │   ├── order
+│   │   │   │   │   └── [id]
+│   │   │   │   │       ├── confirmed
+│   │   │   │   │       │   ├── loading.tsx
+│   │   │   │   │       │   └── page.tsx
+│   │   │   │   │       └── transfer
+│   │   │   │   │           └── [token]
+│   │   │   │   │               ├── accept
+│   │   │   │   │               │   └── page.tsx
+│   │   │   │   │               ├── decline
+│   │   │   │   │               │   └── page.tsx
+│   │   │   │   │               └── page.tsx
+│   │   │   │   ├── page.tsx
+│   │   │   │   ├── products
+│   │   │   │   │   └── [handle]
+│   │   │   │   │       └── page.tsx
+│   │   │   │   └── store
+│   │   │   │       └── page.tsx
+│   │   │   ├── artists
+│   │   │   │   └── [handle]
+│   │   │   │       └── page.tsx
+│   │   │   └── studio
+│   │   │       └── [[...index]]
+│   │   │           └── page.tsx
+│   │   ├── api
+│   │   │   └── sync-medusa-to-sanity
+│   │   │       └── route.ts
+│   │   ├── layout.tsx
+│   │   ├── not-found.tsx
+│   │   ├── opengraph-image.jpg
+│   │   └── twitter-image.jpg
+│   ├── lib
+│   │   ├── config.ts
+│   │   ├── constants.tsx
+│   │   ├── context
+│   │   │   └── modal-context.tsx
+│   │   ├── data
+│   │   │   ├── cart.ts
+│   │   │   ├── categories.ts
+│   │   │   ├── collections.ts
+│   │   │   ├── cookies.ts
+│   │   │   ├── customer.ts
+│   │   │   ├── fulfillment.ts
+│   │   │   ├── locale-actions.ts
+│   │   │   ├── locales.ts
+│   │   │   ├── onboarding.ts
+│   │   │   ├── orders.ts
+│   │   │   ├── payment.ts
+│   │   │   ├── products.ts
+│   │   │   ├── regions.ts
+│   │   │   └── variants.ts
+│   │   ├── hooks
+│   │   │   ├── use-in-view.tsx
+│   │   │   ├── use-toggle-state.tsx
+│   │   │   └── use-ui-translation.tsx
+│   │   ├── medusa-client.ts
+│   │   ├── medusa-products.ts
+│   │   ├── sanity-client.ts
+│   │   ├── ui-dictionary.ts
+│   │   └── util
+│   │       ├── compare-addresses.ts
+│   │       ├── env.ts
+│   │       ├── get-locale-header.ts
+│   │       ├── get-percentage-diff.ts
+│   │       ├── get-product-price.ts
+│   │       ├── isEmpty.ts
+│   │       ├── medusa-error.ts
+│   │       ├── money.ts
+│   │       ├── product.ts
+│   │       ├── repeat.ts
+│   │       └── sort-products.ts
+│   ├── middleware.ts
+│   ├── modules
+│   │   ├── account
+│   │   │   ├── components
+│   │   │   │   ├── account-info
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── account-nav
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── address-book
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── address-card
+│   │   │   │   │   ├── add-address.tsx
+│   │   │   │   │   └── edit-address-modal.tsx
+│   │   │   │   ├── login
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── order-card
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── order-overview
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── overview
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── profile-billing-address
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── profile-email
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── profile-name
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── profile-password
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── profile-phone
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── register
+│   │   │   │   │   └── index.tsx
+│   │   │   │   └── transfer-request-form
+│   │   │   │       └── index.tsx
+│   │   │   └── templates
+│   │   │       ├── account-layout.tsx
+│   │   │       └── login-template.tsx
+│   │   ├── cart
+│   │   │   ├── components
+│   │   │   │   ├── cart-item-select
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── empty-cart-message
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── item
+│   │   │   │   │   └── index.tsx
+│   │   │   │   └── sign-in-prompt
+│   │   │   │       └── index.tsx
+│   │   │   └── templates
+│   │   │       ├── index.tsx
+│   │   │       ├── items.tsx
+│   │   │       ├── preview.tsx
+│   │   │       └── summary.tsx
+│   │   ├── categories
+│   │   │   └── templates
+│   │   │       └── index.tsx
+│   │   ├── checkout
+│   │   │   ├── components
+│   │   │   │   ├── address-select
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── addresses
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── billing_address
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── country-select
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── discount-code
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── error-message
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── payment
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── payment-button
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── payment-container
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── payment-test
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── payment-wrapper
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── stripe-wrapper.tsx
+│   │   │   │   ├── review
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── shipping
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── shipping-address
+│   │   │   │   │   └── index.tsx
+│   │   │   │   └── submit-button
+│   │   │   │       └── index.tsx
+│   │   │   └── templates
+│   │   │       ├── checkout-form
+│   │   │       │   └── index.tsx
+│   │   │       └── checkout-summary
+│   │   │           └── index.tsx
+│   │   ├── collections
+│   │   │   └── templates
+│   │   │       └── index.tsx
+│   │   ├── common
+│   │   │   ├── components
+│   │   │   │   ├── cart-totals
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── checkbox
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── delete-button
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── divider
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── filter-radio-group
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── input
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── interactive-link
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── line-item-options
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── line-item-price
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── line-item-unit-price
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── localized-client-link
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── modal
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── native-select
+│   │   │   │   │   └── index.tsx
+│   │   │   │   └── radio
+│   │   │   │       └── index.tsx
+│   │   │   └── icons
+│   │   │       ├── back.tsx
+│   │   │       ├── bancontact.tsx
+│   │   │       ├── chevron-down.tsx
+│   │   │       ├── eye-off.tsx
+│   │   │       ├── eye.tsx
+│   │   │       ├── fast-delivery.tsx
+│   │   │       ├── ideal.tsx
+│   │   │       ├── map-pin.tsx
+│   │   │       ├── medusa.tsx
+│   │   │       ├── nextjs.tsx
+│   │   │       ├── package.tsx
+│   │   │       ├── paypal.tsx
+│   │   │       ├── placeholder-image.tsx
+│   │   │       ├── refresh.tsx
+│   │   │       ├── spinner.tsx
+│   │   │       ├── trash.tsx
+│   │   │       ├── user.tsx
+│   │   │       └── x.tsx
+│   │   ├── home
+│   │   │   └── components
+│   │   │       ├── client-home-wrapper
+│   │   │       │   └── index.tsx
+│   │   │       ├── featured-products
+│   │   │       │   ├── index.tsx
+│   │   │       │   └── product-rail
+│   │   │       │       └── index.tsx
+│   │   │       └── hero
+│   │   │           └── index.tsx
+│   │   ├── layout
+│   │   │   ├── components
+│   │   │   │   ├── cart-button
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── cart-dropdown
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── cart-mismatch-banner
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── country-select
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── language-select
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── medusa-cta
+│   │   │   │   │   └── index.tsx
+│   │   │   │   └── side-menu
+│   │   │   │       └── index.tsx
+│   │   │   └── templates
+│   │   │       ├── footer
+│   │   │       │   └── index.tsx
+│   │   │       └── nav
+│   │   │           └── index.tsx
+│   │   ├── order
+│   │   │   ├── components
+│   │   │   │   ├── help
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── item
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── items
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── onboarding-cta
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── order-details
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── order-summary
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── payment-details
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── shipping-details
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── transfer-actions
+│   │   │   │   │   └── index.tsx
+│   │   │   │   └── transfer-image
+│   │   │   │       └── index.tsx
+│   │   │   └── templates
+│   │   │       ├── order-completed-template.tsx
+│   │   │       └── order-details-template.tsx
+│   │   ├── products
+│   │   │   ├── components
+│   │   │   │   ├── image-gallery
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── product-actions
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   ├── mobile-actions.tsx
+│   │   │   │   │   └── option-select.tsx
+│   │   │   │   ├── product-onboarding-cta
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── product-preview
+│   │   │   │   │   ├── index.tsx
+│   │   │   │   │   └── price.tsx
+│   │   │   │   ├── product-price
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── product-tabs
+│   │   │   │   │   ├── accordion.tsx
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── related-products
+│   │   │   │   │   └── index.tsx
+│   │   │   │   └── thumbnail
+│   │   │   │       └── index.tsx
+│   │   │   └── templates
+│   │   │       ├── index.tsx
+│   │   │       ├── product-actions-wrapper
+│   │   │       │   └── index.tsx
+│   │   │       └── product-info
+│   │   │           └── index.tsx
+│   │   ├── shipping
+│   │   │   └── components
+│   │   │       └── free-shipping-price-nudge
+│   │   │           └── index.tsx
+│   │   ├── skeletons
+│   │   │   ├── components
+│   │   │   │   ├── skeleton-button
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── skeleton-card-details
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── skeleton-cart-item
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── skeleton-cart-totals
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── skeleton-code-form
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── skeleton-line-item
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── skeleton-order-confirmed-header
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── skeleton-order-information
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── skeleton-order-items
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── skeleton-order-summary
+│   │   │   │   │   └── index.tsx
+│   │   │   │   └── skeleton-product-preview
+│   │   │   │       └── index.tsx
+│   │   │   └── templates
+│   │   │       ├── skeleton-cart-page
+│   │   │       │   └── index.tsx
+│   │   │       ├── skeleton-order-confirmed
+│   │   │       │   └── index.tsx
+│   │   │       ├── skeleton-product-grid
+│   │   │       │   └── index.tsx
+│   │   │       └── skeleton-related-products
+│   │   │           └── index.tsx
+│   │   └── store
+│   │       ├── components
+│   │       │   ├── pagination
+│   │       │   │   └── index.tsx
+│   │       │   └── refinement-list
+│   │       │       ├── index.tsx
+│   │       │       └── sort-products
+│   │       │           └── index.tsx
+│   │       └── templates
+│   │           ├── index.tsx
+│   │           └── paginated-products.tsx
+│   ├── sanity
+│   │   ├── config.ts
+│   │   ├── env.ts
+│   │   └── schemaTypes
+│   │       ├── artistDialogue.ts
+│   │       ├── blog.ts
+│   │       ├── buyingGuide.ts
+│   │       ├── common
+│   │       │   ├── localizedString.ts
+│   │       │   └── localizedText.ts
+│   │       ├── home.ts
+│   │       ├── index.ts
+│   │       ├── inquiry.ts
+│   │       ├── medusaStructure.ts
+│   │       ├── products.ts
+│   │       └── worksByArtist.ts
+│   ├── styles
+│   │   └── globals.css
+│   └── types
+│       ├── global.ts
+│       └── icon.ts
+├── tailwind.config.js
+├── tsconfig.json
+└── yarn.lock
+
+186 directories, 251 files
