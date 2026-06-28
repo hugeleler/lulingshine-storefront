@@ -11,7 +11,6 @@
 ├── postcss.config.js
 ├── public
 │   ├── favicon.ico
-│   ├── home-hero_.jpg
 │   ├── home-hero.jpg
 │   └── payments
 │       ├── amex.svg
@@ -436,4 +435,4 @@
 ├── tsconfig.json
 └── yarn.lock
 
-186 directories, 251 files
+186 directories, 250 files

@@ -1,5 +1,3 @@
-// 📁 完整路徑：src/lib/ui-dictionary.ts
-
 export type LocaleType = "zh-TW" | "zh-CN" | "en" | "ja" | "ko"
 
 // 🏛️ LULINGSHINE 全站 UI 靜態文案中央字典
@@ -12,14 +10,47 @@ export const uiDictionary: Record<string, Record<LocaleType, string>> = {
   search: { "zh-TW": "搜尋", "zh-CN": "搜寻", en: "Search", ja: "検索", ko: "검색" },
   loading: { "zh-TW": "加載中...", "zh-CN": "加载中...", en: "Loading...", ja: "読み込み中...", ko: "로딩 중..." },
 
-  // 🧭 新增：主選單導航欄完整翻譯鏈條
-  navHome: { "zh-TW": "家", "zh-CN": "首页", en: "Home", ja: "ホーム", ko: "홈" },
-  navStore: { "zh-TW": "處理的产品", "zh-CN": "所有产品", en: "Collections", ja: "作品一覧", ko: "작품보기" },
+  // 🧭 終極校準：全語系 5 大核心高奢美學導航欄
+  navHome: { "zh-TW": "首頁", "zh-CN": "首页", en: "Home", ja: "ホーム", ko: "홈" },
+  
+  // 02. 昱西器物 / Lulingshine Objects
+  navStore: { 
+    "zh-TW": "昱西器物", 
+    "zh-CN": "昱西器物", 
+    en: "Lulingshine Objects", 
+    ja: "昱西器物", 
+    ko: "욱서기물" 
+  },
+  
+  // 03. 大師傑作 / Masterworks
+  navArtists: { 
+    "zh-TW": "大師傑作", 
+    "zh-CN": "大师杰作", 
+    en: "Masterworks", 
+    ja: "名家傑作", 
+    ko: "명가걸작" 
+  },
+  
+  // 04. 博客文誌 / Blog & Review
+  navBlog: { 
+    "zh-TW": "博客文誌", 
+    "zh-CN": "博客文志", 
+    en: "Blog & Review", 
+    ja: "ブログ文誌", 
+    ko: "블로그문지" 
+  },
+  
+  // 05. 藏家洽詢 / Acquisition & Inquiry
+  navInquiry: { 
+    "zh-TW": "藏家洽詢", 
+    "zh-CN": "藏家洽询", 
+    en: "Acquisition & Inquiry", 
+    ja: "コレクター相談", 
+    ko: "소장가상담" 
+  },
+
   navAbout: { "zh-TW": "問候", "zh-CN": "品牌问候", en: "Greetings", ja: "ご挨拶", ko: "인사말" },
-  navArtists: { "zh-TW": "藝術家對話", "zh-CN": "艺术家对话", en: "Artists", ja: "作家対話", ko: "작가대화" },
-  navBlog: { "zh-TW": "博客", "zh-CN": "文人博客", en: "Journal", ja: "ブログ", ko: "블로그" },
   navPackaging: { "zh-TW": "包裝", "zh-CN": "柴窑包装", en: "Packaging", ja: "桐箱包装", ko: "포장안내" },
-  navInquiry: { "zh-TW": "查詢", "zh-CN": "定制查询", en: "Inquiry", ja: "お問い合わせ", ko: "문의하기" },
 
   // 商品與合集區塊（原裝保留）
   viewAll: { "zh-TW": "查看全部", "zh-CN": "查看全部", en: "View all", ja: "すべて見る", ko: "전체 보기" },
@@ -28,7 +59,7 @@ export const uiDictionary: Record<string, Record<LocaleType, string>> = {
   priceHighLow: { "zh-TW": "價格：由高到低", "zh-CN": "价格：由高到低", en: "Price: High to Low", ja: "価格の割高順", ko: "가격: 높은 순" },
   priceLowHigh: { "zh-TW": "價格：由低到高", "zh-CN": "价格：由低到高", en: "Price: Low to High", ja: "価格の割安順", ko: "가격: 낮은 순" },
 
-  // 首頁核心巨幕文案
+  // 首頁核心巨幕文案（原裝保留）
   heroTitle: { "zh-TW": "廬陵昱西", "zh-CN": "庐陵昱西", en: "LULINGSHINE", ja: "廬陵昱西", ko: "루링샤인" },
   heroSub: { 
     "zh-TW": "景德鎮當代名家柴窯孤品重器", 

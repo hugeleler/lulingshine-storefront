@@ -14,7 +14,6 @@ import LineItemOptions from "@modules/common/components/line-item-options"
 import LineItemPrice from "@modules/common/components/line-item-price"
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import Thumbnail from "@modules/products/components/thumbnail"
-import { usePathname } from "next/navigation"
 import { Fragment, useEffect, useRef, useState } from "react"
 
 const CartDropdown = ({
@@ -22,27 +21,25 @@ const CartDropdown = ({
 }: {
   cart?: HttpTypes.StoreCart | null
 }) => {
-  const [activeTimer, setActiveTimer] = useState<NodeJS.Timer | undefined>(
-    undefined
-  )
+  const [activeTimer, setActiveTimer] = useState<NodeJS.Timer | undefined>(undefined)
   const [cartDropdownOpen, setCartDropdownOpen] = useState(false)
+  
+  // 🧠 預設繁體中文
+  const [cartLabel, setCartLabel] = useState("購物車")
 
   const open = () => setCartDropdownOpen(true)
   const close = () => setCartDropdownOpen(false)
 
-  const totalItems =
-    cartState?.items?.reduce((acc, item) => {
-      return acc + item.quantity
-    }, 0) || 0
+  const totalItems = cartState?.items?.reduce((acc, item) => {
+    return acc + item.quantity
+  }, 0) || 0
 
   const subtotal = cartState?.subtotal ?? 0
   const itemRef = useRef<number>(totalItems || 0)
 
   const timedOpen = () => {
     open()
-
     const timer = setTimeout(close, 5000)
-
     setActiveTimer(timer)
   }
 
@@ -50,11 +47,9 @@ const CartDropdown = ({
     if (activeTimer) {
       clearTimeout(activeTimer)
     }
-
     open()
   }
 
-  // Clean up the timer when the component unmounts
   useEffect(() => {
     return () => {
       if (activeTimer) {
@@ -63,15 +58,29 @@ const CartDropdown = ({
     }
   }, [activeTimer])
 
-  const pathname = usePathname()
-
-  // open cart dropdown when modifying the cart items, but only if we're not on the cart page
+  // 🌟 繁、簡、英、日、韓，五條線路完美精準解碼
   useEffect(() => {
-    if (itemRef.current !== totalItems && !pathname.includes("/cart")) {
-      timedOpen()
+    try {
+      const locale = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("medusa_locale="))
+        ?.split("=")[1]
+
+      if (locale === "en") {
+        setCartLabel("CART")
+      } else if (locale === "ja") {
+        setCartLabel("カート")
+      } else if (locale === "ko") {
+        setCartLabel("카트")
+      } else if (locale === "zh-CN") {
+        setCartLabel("购物车") // 👈 簡體中文精準分流
+      } else {
+        setCartLabel("購物車") // 👈 預設為繁體中文 (zh-TW)
+      }
+    } catch (e) {
+      console.error("Failed to read locale cookie on client side.")
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [totalItems, itemRef.current])
+  }, [cartState])
 
   return (
     <div
@@ -82,11 +91,14 @@ const CartDropdown = ({
       <Popover className="relative h-full">
         <PopoverButton className="h-full">
           <LocalizedClientLink
-            className="hover:text-ui-fg-base"
+            className="hover:text-black tracking-[0.15em] transition-colors"
             href="/cart"
             data-testid="nav-cart-link"
-          >{`Cart (${totalItems})`}</LocalizedClientLink>
+          >
+            {`${cartLabel} (${totalItems})`}
+          </LocalizedClientLink>
         </PopoverButton>
+
         <Transition
           show={cartDropdownOpen}
           as={Fragment}
@@ -99,20 +111,19 @@ const CartDropdown = ({
         >
           <PopoverPanel
             static
-            className="hidden small:block absolute top-[calc(100%+1px)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base"
+            className="hidden small:block absolute top-[calc(100%+1px)] right-0 bg-white border-x border-b border-gray-200 w-[420px] text-ui-fg-base shadow-md"
             data-testid="nav-cart-dropdown"
           >
-            <div className="p-4 flex items-center justify-center">
-              <h3 className="text-large-semi">Cart</h3>
+            <div className="p-4 flex items-center justify-center border-b border-gray-50">
+              <h3 className="text-base font-medium uppercase tracking-widest text-gray-700">Cart</h3>
             </div>
+
             {cartState && cartState.items?.length ? (
               <>
-                <div className="overflow-y-scroll max-h-[402px] px-4 grid grid-cols-1 gap-y-8 no-scrollbar p-px">
+                <div className="overflow-y-scroll max-h-[402px] px-4 grid grid-cols-1 gap-y-8 no-scrollbar p-px mt-4">
                   {cartState.items
                     .sort((a, b) => {
-                      return (a.created_at ?? "") > (b.created_at ?? "")
-                        ? -1
-                        : 1
+                      return (a.created_at ?? "") > (b.created_at ?? "") ? -1 : 1
                     })
                     .map((item) => (
                       <div
@@ -130,6 +141,7 @@ const CartDropdown = ({
                             size="square"
                           />
                         </LocalizedClientLink>
+
                         <div className="flex flex-col justify-between flex-1">
                           <div className="flex flex-col flex-1">
                             <div className="flex items-start justify-between">
@@ -150,6 +162,7 @@ const CartDropdown = ({
                                 <span
                                   data-testid="cart-item-quantity"
                                   data-value={item.quantity}
+                                  className="text-gray-400 text-xs mt-1"
                                 >
                                   Quantity: {item.quantity}
                                 </span>
@@ -165,7 +178,7 @@ const CartDropdown = ({
                           </div>
                           <DeleteButton
                             id={item.id}
-                            className="mt-1"
+                            className="mt-1 text-xs text-gray-400 hover:text-red-600 transition-colors"
                             data-testid="cart-item-remove-button"
                           >
                             Remove
@@ -174,14 +187,14 @@ const CartDropdown = ({
                       </div>
                     ))}
                 </div>
-                <div className="p-4 flex flex-col gap-y-4 text-small-regular">
+
+                <div className="p-4 flex flex-col gap-y-4 text-small-regular border-t border-gray-50 mt-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-ui-fg-base font-semibold">
-                      Subtotal{" "}
-                      <span className="font-normal">(excl. taxes)</span>
+                    <span className="text-gray-700 font-medium">
+                      Subtotal <span className="font-normal text-gray-400">(excl. taxes)</span>
                     </span>
                     <span
-                      className="text-large-semi"
+                      className="text-large-semi text-gray-900"
                       data-testid="cart-subtotal"
                       data-value={subtotal}
                     >
@@ -193,7 +206,7 @@ const CartDropdown = ({
                   </div>
                   <LocalizedClientLink href="/cart" passHref>
                     <Button
-                      className="w-full"
+                      className="w-full bg-gray-900 hover:bg-gray-800 text-white rounded-none py-3"
                       size="large"
                       data-testid="go-to-cart-button"
                     >
@@ -208,13 +221,15 @@ const CartDropdown = ({
                   <div className="bg-gray-900 text-small-regular flex items-center justify-center w-6 h-6 rounded-full text-white">
                     <span>0</span>
                   </div>
-                  <span>Your shopping bag is empty.</span>
+                  <span className="text-gray-400 font-serif">Your shopping bag is empty.</span>
                   <div>
                     <LocalizedClientLink href="/store">
-                      <>
-                        <span className="sr-only">Go to all products page</span>
-                        <Button onClick={close}>Explore products</Button>
-                      </>
+                      <Button 
+                        onClick={close}
+                        className="bg-gray-900 hover:bg-gray-800 text-white rounded-none px-6"
+                      >
+                        Explore products
+                      </Button>
                     </LocalizedClientLink>
                   </div>
                 </div>
