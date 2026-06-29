@@ -6,28 +6,31 @@
 
 # dependencies
 /node_modules
+node_modules
 /.pnp
 .pnp.js
 
-# testing
+# testing & e2e
 /coverage
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth
 
-# next.js
+# next.js & build
 /.next/
 /out/
-
-# production
 /build
+.swc
+*.tsbuildinfo
 
-# misc
-.DS_Store
-*.pem
-
-# debug
+# debug & databases
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+dump.rdb
 
 # local env files
 .env
@@ -39,20 +42,11 @@ yarn-error.log*
 # vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-node_modules
-
+# yarn v2+
 .yarn/*
 !.yarn/releases
-.swc
-dump.rdb
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth
+
+# system logs (macOS)
+.DS_Store
+**/.DS_Store
+*.pem
