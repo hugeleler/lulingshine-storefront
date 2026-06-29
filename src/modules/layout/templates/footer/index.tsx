@@ -1,4 +1,3 @@
-// 📁 完整路徑：src/modules/layout/templates/footer/index.tsx
 "use client"
 
 import React, { useEffect, useState, useTransition } from "react"
@@ -15,14 +14,57 @@ const LANGUAGES = [
   { code: "ko", label: "한국어" },
 ]
 
+// 🏛️ LULINGSHINE 國際高奢極簡前台對照字典（全面去除括號，極致視覺淨化）
 const REGION_DICTIONARY: Record<string, Record<string, string>> = {
-  hk: { "zh-TW": "香港特別行政區", "zh-CN": "香港特别行政区", en: "Hong Kong SAR", ja: "香港特別行政区", ko: "홍콩 特別행정구" },
-  jp: { "zh-TW": "日本", "zh-CN": "日本", en: "Japan", ja: "日本", ko: "일본" },
-  tw: { "zh-TW": "台灣地區", "zh-CN": "台湾地区", en: "Taiwan Region", ja: "台湾地域", ko: "대만 지역" },
-  kr: { "zh-TW": "韓國", "zh-CN": "韩国", en: "South Korea", ja: "韓国", ko: "대한민국" },
-  us: { "zh-TW": "美國", "zh-CN": "美国", en: "United States", ja: "米国", ko: "미국" },
-  id: { "zh-TW": "國際市場", "zh-CN": "国际市场", en: "International Market", ja: "国際市場", ko: "국제 시장" },
-  fr: { "zh-TW": "歐盟區域", "zh-CN": "欧盟区域", en: "Eurozone (EUR)", ja: "ユーロ圏", ko: "유로존" },
+  hk: { 
+    "zh-TW": "香港HongKong", 
+    "zh-CN": "香港HongKong", 
+    en: "Hong Kong", 
+    ja: "香港HongKong", 
+    ko: "홍콩HongKong" 
+  },
+  tw: { 
+    "zh-TW": "臺灣Taiwan", 
+    "zh-CN": "臺灣Taiwan", 
+    en: "Taiwan", 
+    ja: "臺灣Taiwan", 
+    ko: "대만Taiwan" 
+  },
+  us: { 
+    "zh-TW": "美國USA", 
+    "zh-CN": "美国USA", 
+    en: "United States", // 👈 英文時精準簡化為 United States
+    ja: "米国USA", 
+    ko: "미국USA" 
+  },
+  jp: { 
+    "zh-TW": "日本Japan", 
+    "zh-CN": "日本Japan", 
+    en: "Japan", 
+    ja: "日本Japan", 
+    ko: "일본Japan" 
+  },
+  kr: { 
+    "zh-TW": "韓國Korea", 
+    "zh-CN": "韩国Korea", 
+    en: "Korea", 
+    ja: "韓国Korea", 
+    ko: "한국Korea" 
+  },
+  fr: { 
+    "zh-TW": "歐洲經濟區EEA", // 👈 去除後台長串括號提示
+    "zh-CN": "欧洲经济区EEA", 
+    en: "EEA", 
+    ja: "欧州経済領域EEA", 
+    ko: "유럽 경제 지역 EEA" 
+  },
+  gb: { 
+    "zh-TW": "國際市場RoW", // 👈 去除括號，保持乾淨
+    "zh-CN": "国际市场RoW", 
+    en: "Rest of World", // 👈 英文時精準簡化為 Rest of World
+    ja: "国際市場RoW", 
+    ko: "국제 시장 RoW" 
+  },
 }
 
 const LocalPaymentIcon = ({ src, alt }: { src: string, alt: string }) => (
@@ -80,29 +122,27 @@ export default function Footer() {
     const targetLang = e.target.value
     setActiveLocale(targetLang)
     
-    // 🚀 【終極防線】不管 Medusa 底層做不做，我們在前台用原生 JavaScript 把 Cookie 直接寫死寫滿！
-    // 設置過期時間為 1 年，確保全站路由和服務端隨時隨地能抓到最真實的語言！
     if (typeof window !== "undefined") {
       document.cookie = `medusa_locale=${targetLang}; path=/; max-age=31536000; SameSite=Lax`
     }
 
     startTransition(async () => {
       await updateLocale(targetLang)
-      // 📢 執行硬重新整理，強迫服務端的 Nav 重新撈取剛才寫入的最新 Cookie
       if (typeof window !== "undefined") {
         window.location.reload()
       }
     })
   }
 
+  // 🛠️ 核心強控排序：將 gb (國際市場RoW) 穩穩死鎖在最後一欄
   const regionOptions = [
     { value: "hk", key: "hk", currency: "HKD ($)" },
-    { value: "jp", key: "jp", currency: "JPY (¥)" },
     { value: "tw", key: "tw", currency: "TWD ($)" },
-    { value: "kr", key: "kr", currency: "KRW (₩)" },
     { value: "us", key: "us", currency: "USD ($)" },
-    { value: "id", key: "id", currency: "USD ($)" },
+    { value: "jp", key: "jp", currency: "JPY (¥)" },
+    { value: "kr", key: "kr", currency: "KRW (₩)" },
     { value: "fr", key: "fr", currency: "EUR (€)" },
+    { value: "gb", key: "gb", currency: "USD ($)" }, // 👈 國際通用市場 (RoW) 成功沉底至最後一欄
   ]
 
   return (
