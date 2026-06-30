@@ -1,3 +1,4 @@
+// 📁 完整路徑：src/app/[countryCode]/(main)/products/[handle]/page.tsx
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { listProducts } from "@lib/data/products"
@@ -11,7 +12,7 @@ export const revalidate = 0
 
 type Props = {
   params: Promise<{ countryCode: string; handle: string }>
-  searchParams: Promise<{ v_id?: string }>
+  searchParams: Promise<{ v_id?: string; r_page?: string }> // 👈 🎯 擴展型別，納入相關產品的動態分頁參數
 }
 
 export async function generateStaticParams() {
@@ -110,21 +111,41 @@ export default async function ProductPage(props: Props) {
   const searchParams = await props.searchParams
 
   const selectedVariantId = searchParams.v_id
+  
+  // 🎯 核心通電：精確解析 URL 上的推薦商品分頁碼（如 ?r_page=2），轉為整數，預設為第 1 頁
+  const relatedPage = searchParams.r_page ? parseInt(searchParams.r_page, 10) : 1
 
   if (!region) {
     notFound()
   }
 
+  // 1. 獲取主商品數據
   const pricedProduct = await listProducts({
     countryCode: params.countryCode,
     queryParams: { handle: params.handle },
   }).then(({ response }) => response.products[0])
 
-  const images = getImagesForVariant(pricedProduct, selectedVariantId)
-
   if (!pricedProduct) {
     notFound()
   }
+
+  const images = getImagesForVariant(pricedProduct, selectedVariantId)
+
+  // -----------------------------------------------------------------
+  // 🎯 核心通電：在 Server 端一次性將與當前商品關聯的所有同系列/標籤產品全部撈乾淨
+  // -----------------------------------------------------------------
+  const queryParams: any = { is_giftcard: false }
+  if (region?.id) queryParams.region_id = region.id
+  if (pricedProduct.collection_id) queryParams.collection_id = [pricedProduct.collection_id]
+  if (pricedProduct.tags) queryParams.tag_id = pricedProduct.tags.map((t: any) => t.id).filter(Boolean)
+
+  const allRelatedProducts = await listProducts({
+    queryParams,
+    countryCode: params.countryCode,
+  }).then(({ response }) => {
+    // 🧠 核心安全過濾：將 11 個推薦產品完整提取，但必須狠狠把當前正在看的這件瓷器本身踢出去
+    return response.products.filter((p) => p.id !== pricedProduct.id)
+  })
 
   return (
     <ProductTemplate
@@ -132,6 +153,8 @@ export default async function ProductPage(props: Props) {
       region={region}
       countryCode={params.countryCode}
       images={images}
+      relatedProducts={allRelatedProducts} // 👈 🎯 將 11 個產品全量送入中轉範本
+      relatedPage={relatedPage}            // 👈 🎯 將目前的分頁碼同步遞送下去
     />
   )
 }

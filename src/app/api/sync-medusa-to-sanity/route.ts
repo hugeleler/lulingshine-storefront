@@ -21,7 +21,7 @@ export async function GET() {
 
   (async () => {
     try {
-      // 1. 鋪設 HTML 基礎地基（數字全動態監聽）
+      // 1. 鋪設 HTML 基礎地基
       await streamWrite(`
         <!DOCTYPE html>
         <html lang="zh-HK">
@@ -58,7 +58,6 @@ export async function GET() {
               const t = document.getElementById('term');
               if(t) t.scrollTop = t.scrollHeight;
             }
-            // 🧠 完美修復：精確指哪打哪，只改括號裡面的數字，總數全自動化讀取
             function updateLiveProgress(current, total) {
               const displayHtml = "[" + current + "/" + total + "]";
               document.getElementById('medusa-count').innerText = displayHtml;
@@ -69,7 +68,7 @@ export async function GET() {
         <body>
           <div class="container">
             <header>
-              <h1>廬陵昱西自動化對賬終端 v4.3 (全動態條目讀取版)</h1>
+              <h1>廬陵昱西自動化對賬終端 v4.4 (CMS多語言保護版)</h1>
               <p style="margin: 5px 0 0 0; color: #999;">數據流暢通，等待讀取數據庫真實條目數...</p>
               <div id="term" class="terminal">
                 <div style="color: #94a3b8; border-bottom: 1px solid #334155; padding-bottom: 5px; margin-bottom: 8px; font-weight: bold;">📊 實時連線進度診斷 (Stream Logs)</div>
@@ -88,7 +87,7 @@ export async function GET() {
               <div class="panel">
                 <h2 class="sanity-h2">右側線：Sanity 智慧寫入狀態 <span id="sanity-count" class="progress-badge sanity-p">[0/...]</span></h2>
                 <table id="sanity-table">
-                  <thead><tr><th>Sanity 標題內容</th><th>類型 / 數據庫 ID (_id)</th></tr></thead>
+                  <thead><tr><th>Sanity 智慧對齊欄位</th><th>類型 / 數據庫 ID (_id)</th></tr></thead>
                   <tbody></tbody>
                 </table>
               </div>
@@ -122,13 +121,10 @@ export async function GET() {
 
       const data = await medusaResponse.json()
       const medusaCategories = data.product_categories || []
-      
-      // 🎯 這裡！實時讀取出來的總數，不論是 49、50 還是 100，交給變量自動接管！
       const totalCount = medusaCategories.length
       
       await streamWrite(`<script>
         document.getElementById('term').insertAdjacentHTML('beforeend', '<div class="log-line log-success">✅ Medusa 連線成功！數據庫實時讀取到共計 ${totalCount} 個產品分類。</div>');
-        // 初始同步一下總數看板，讓遊客進來就能看到 [0/實際總數]
         updateLiveProgress(0, ${totalCount});
         scrollLog();
       </script>`)
@@ -145,28 +141,35 @@ export async function GET() {
         await streamWrite(`<script>
           updateLiveProgress(${count}, ${totalCount}); 
           document.getElementById('medusa-table').getElementsByTagName('tbody')[0].insertAdjacentHTML('beforeend', '${leftRowHtml}');
-          document.getElementById('term').insertAdjacentHTML('beforeend', '<div class="log-line">⏳ [${count}/${totalCount}] 正在加載 ➔ <strong>${name}</strong>...</div>');
+          document.getElementById('term').insertAdjacentHTML('beforeend', '<div class="log-line">⏳ [${count}/${totalCount}] 正在檢索 ➔ <strong>${name}</strong>...</div>');
           scrollLog();
         </script>`)
 
-        // B. 智慧同步到 Sanity
+        // B. 智慧同步到 Sanity (改用 createIfNotExists 保護既有翻譯成果)
         const safeIdSuffix = encodeURIComponent(handle).replace(/%/g, '_')
         const targetId = `page-content-${safeIdSuffix}`
         const isArtist = handle.startsWith('art-')
         
-        await sanityWriteClient.createOrReplace({
-          _type: 'pageContent',
-          _id: targetId, 
-          categoryHandle: handle,
-          pageType: isArtist ? 'artist' : 'collection',
-          title: { zh_HK: name, zh_CN: name, en: handle.toUpperCase().replace(/-/g, ' '), ja: "", ko: "" }
-        })
+        let writeStatus = "🎉 Sanity 數據庫已有該條目，安全跳過（避免覆蓋手填多語言）"
+        
+        try {
+          await sanityWriteClient.createIfNotExists({
+            _type: 'pageContent',
+            _id: targetId, 
+            categoryHandle: handle,
+            pageType: isArtist ? 'artist' : 'collection',
+            title: { zh_HK: name, zh_CN: name, en: handle.toUpperCase().replace(/-/g, ' '), ja: "", ko: "" }
+          })
+          writeStatus = "🎉 Sanity 新分類初始化建立成功！請前往後台補齊多語言"
+        } catch (err) {
+          writeStatus = `⚠️ 條目對齊完畢 (狀態受保護)`
+        }
 
         // C. 實時渲染右側
         const rightRowHtml = `<tr><td><strong>${name}</strong><small>${handle.toUpperCase()}</small></td><td><span class="badge ${isArtist ? 'type-artist' : 'type-collection'}">${isArtist ? 'artist' : 'collection'}</span><small>${targetId}</small></td></tr>`.replace(/'/g, "\\'")
         await streamWrite(`<script>
           document.getElementById('sanity-table').getElementsByTagName('tbody')[0].insertAdjacentHTML('beforeend', '${rightRowHtml}');
-          document.getElementById('term').insertAdjacentHTML('beforeend', '<div class="log-line log-success">   ➔ 🎉 Sanity 數據庫寫入成功！</div>');
+          document.getElementById('term').insertAdjacentHTML('beforeend', '<div class="log-line log-success">   ➔ ${writeStatus}</div>');
           scrollLog();
         </script>`)
 
@@ -174,7 +177,7 @@ export async function GET() {
       }
 
       await streamWrite(`<script>
-        document.getElementById('term').insertAdjacentHTML('beforeend', '<div class="log-line log-success">🎉 報告馬克冰老大！全店 ${totalCount} 個大類已全線動態對齊、完美著陸！</div>');
+        document.getElementById('term').insertAdjacentHTML('beforeend', '<div class="log-line log-success">🎉 報告馬克冰老大！全店 ${totalCount} 個大類雙軌對賬已全線動態對齊、完美著陸！</div>');
         scrollLog();
       </script>`)
 

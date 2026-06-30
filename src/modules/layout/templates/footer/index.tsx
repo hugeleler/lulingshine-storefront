@@ -33,7 +33,7 @@ const REGION_DICTIONARY: Record<string, Record<string, string>> = {
   us: { 
     "zh-TW": "美國USA", 
     "zh-CN": "美国USA", 
-    en: "United States", // 👈 英文時精準簡化為 United States
+    en: "United States", // 👈 2. 地區為 English 時，精準簡化為 United States
     ja: "米国USA", 
     ko: "미국USA" 
   },
@@ -52,16 +52,16 @@ const REGION_DICTIONARY: Record<string, Record<string, string>> = {
     ko: "한국Korea" 
   },
   fr: { 
-    "zh-TW": "歐洲經濟區EEA", // 👈 去除後台長串括號提示
+    "zh-TW": "歐洲經濟區EEA", // 👈 4. 全語系去除（）括號內容
     "zh-CN": "欧洲经济区EEA", 
     en: "EEA", 
     ja: "欧州経済領域EEA", 
     ko: "유럽 경제 지역 EEA" 
   },
   gb: { 
-    "zh-TW": "國際市場RoW", // 👈 去除括號，保持乾淨
+    "zh-TW": "國際市場RoW", // 👈 4. 全語系去除（）括號內容
     "zh-CN": "国际市场RoW", 
-    en: "Rest of World", // 👈 英文時精準簡化為 Rest of World
+    en: "Rest of World", // 👈 3. 地區為 English 時，精準簡化為 Rest of World
     ja: "国際市場RoW", 
     ko: "국제 시장 RoW" 
   },
@@ -80,9 +80,14 @@ export default function Footer() {
 
   const [mounted, setMounted] = useState(false)
   const [activeLocale, setActiveLocale] = useState("en")
+  const [currentYear, setCurrentYear] = useState(2026) // 🛡️ 固化初始年份，防止手機端水合衝突
   const [isPending, startTransition] = useTransition()
 
   useEffect(() => {
+    // 1. 在客戶端安全同步真實年份
+    setCurrentYear(new Date().getFullYear())
+
+    // 2. 處理初始語系與 Cookie 反查
     const cc = currentCountry.toLowerCase()
     let initialLocale = "en"
     if (cc === "hk" || cc === "tw") initialLocale = "zh-TW"
@@ -96,7 +101,7 @@ export default function Footer() {
     }
 
     setActiveLocale(initialLocale)
-    setMounted(true)
+    setMounted(true) // 🎯 標記客戶端掛載成功
   }, [currentCountry])
 
   const legalLinks = [
@@ -134,7 +139,7 @@ export default function Footer() {
     })
   }
 
-  // 🛠️ 核心強控排序：將 gb (國際市場RoW) 穩穩死鎖在最後一欄
+  // 🛠️ 1. 核心強控排序：將 gb (國際市場RoW) 穩穩死鎖在最後一欄
   const regionOptions = [
     { value: "hk", key: "hk", currency: "HKD ($)" },
     { value: "tw", key: "tw", currency: "TWD ($)" },
@@ -142,8 +147,13 @@ export default function Footer() {
     { value: "jp", key: "jp", currency: "JPY (¥)" },
     { value: "kr", key: "kr", currency: "KRW (₩)" },
     { value: "fr", key: "fr", currency: "EUR (€)" },
-    { value: "gb", key: "gb", currency: "USD ($)" }, // 👈 國際通用市場 (RoW) 成功沉底至最後一欄
+    { value: "gb", key: "gb", currency: "USD ($)" }, // 👈 RoW 成功沉底至最後一欄
   ]
+
+  // 🛡️ 終極水合防線：伺服器端編譯時先返回骨架結構，等手機端掛載成功後再渲染，徹底規避 Hydration 報錯
+  if (!mounted) {
+    return <footer className="w-full bg-[#faf9f6] min-h-[400px]"></footer>
+  }
 
   return (
     <footer className="w-full bg-[#faf9f6] text-gray-600 border-t border-black/[0.03] pt-20 pb-12 font-sans opacity-95">
@@ -179,13 +189,11 @@ export default function Footer() {
                 <select 
                   value={currentCountry.toLowerCase()}
                   onChange={handleRegionChange}
-                  disabled={isPending || !mounted}
+                  disabled={isPending}
                   className="appearance-none bg-transparent border border-black/20 px-4 py-2 pr-10 text-xs tracking-widest focus:outline-none cursor-pointer hover:border-black transition-colors font-serif bg-[#faf9f6]"
                 >
                   {regionOptions.map((opt) => {
-                    const localizedLabel = mounted 
-                      ? (REGION_DICTIONARY[opt.key]?.[activeLocale] || REGION_DICTIONARY[opt.key]?.["en"])
-                      : REGION_DICTIONARY[opt.key]?.["en"]
+                    const localizedLabel = REGION_DICTIONARY[opt.key]?.[activeLocale] || REGION_DICTIONARY[opt.key]?.["en"]
                     return (
                       <option key={opt.value} value={opt.value}>
                         {localizedLabel} | {opt.currency}
@@ -204,9 +212,9 @@ export default function Footer() {
               <span className="text-gray-400 text-[10px] tracking-[0.2em]">語言</span>
               <div className="relative">
                 <select 
-                  value={mounted ? activeLocale : "en"}
+                  value={activeLocale}
                   onChange={handleLocaleChange}
-                  disabled={isPending || !mounted}
+                  disabled={isPending}
                   className="appearance-none bg-transparent border border-black/20 px-4 py-2 pr-10 text-xs tracking-widest focus:outline-none cursor-pointer hover:border-black transition-colors font-serif bg-[#faf9f6]"
                 >
                   {LANGUAGES.map((lang) => (
@@ -236,7 +244,7 @@ export default function Footer() {
 
         {/* SECTION 3: 最底部版權 */}
         <div className="w-full flex flex-col sm:flex-row items-center justify-between text-[10px] tracking-[0.2em] text-gray-400 font-light pt-6 border-t border-black/[0.02]">
-          <div>© {new Date().getFullYear()} LULINGSHINE CERAMICS (JINGDEZHEN) CO., LIMITED.</div>
+          <div>© {currentYear} LULINGSHINE CERAMICS (JINGDEZHEN) CO., LIMITED.</div>
           <div className="font-sans text-[9px] text-gray-300">JINGDEZHEN CONTEMPORARY CERAMIC ART</div>
         </div>
 

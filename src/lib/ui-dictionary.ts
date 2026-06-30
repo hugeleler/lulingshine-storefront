@@ -2,7 +2,7 @@ export type LocaleType = "zh-TW" | "zh-CN" | "en" | "ja" | "ko"
 
 // 🏛️ LULINGSHINE 全站 UI 靜態文案中央字典
 export const uiDictionary: Record<string, Record<LocaleType, string>> = {
-  // 頁頭與基本導航（原裝保留）
+  // 頁頭與基本導航
   menu: { "zh-TW": "選單", "zh-CN": "选单", en: "MENU", ja: "メニュー", ko: "메뉴" },
   cart: { "zh-TW": "購物車", "zh-CN": "购物车", en: "CART", ja: "カート", ko: "장바구니" },
   shippingTo: { "zh-TW": "配送至", "zh-CN": "配送至", en: "Shipping to", ja: "配送先", ko: "배송지" },
@@ -52,14 +52,23 @@ export const uiDictionary: Record<string, Record<LocaleType, string>> = {
   navAbout: { "zh-TW": "問候", "zh-CN": "品牌问候", en: "Greetings", ja: "ご挨拶", ko: "인사말" },
   navPackaging: { "zh-TW": "包裝", "zh-CN": "柴窑包装", en: "Packaging", ja: "桐箱包装", ko: "포장안내" },
 
-  // 商品與合集區塊（原裝保留）
+  // 商品與合集區塊
   viewAll: { "zh-TW": "查看全部", "zh-CN": "查看全部", en: "View all", ja: "すべて見る", ko: "전체 보기" },
   sortBy: { "zh-TW": "排序依據", "zh-CN": "排序依据", en: "Sort by", ja: "並び替え", ko: "정렬 기준" },
   latestArrivals: { "zh-TW": "最新作品", "zh-CN": "最新作品", en: "Latest Arrivals", ja: "最新作", ko: "최신 입고" },
   priceHighLow: { "zh-TW": "價格：由高到低", "zh-CN": "价格：由高到低", en: "Price: High to Low", ja: "価格の割高順", ko: "가격: 높은 순" },
   priceLowHigh: { "zh-TW": "價格：由低到高", "zh-CN": "价格：由低到高", en: "Price: Low to High", ja: "価格の割安順", ko: "가격: 낮은 순" },
 
-  // 首頁核心巨幕文案（原裝保留）
+  // 🎯 完美歸位：高奢動態產品計數中央文案（內置 {count} 數字動態佔位符）
+  productCount: {
+    "zh-TW": "共 {count} 個產品",
+    "zh-CN": "共 {count} 个产品",
+    "ja": "全 {count} 件の製品",
+    "ko": "총 {count}개의 제품",
+    "en": "{count} Products"
+  },
+
+  // 首頁核心巨幕文案
   heroTitle: { "zh-TW": "廬陵昱西", "zh-CN": "庐陵昱西", en: "LULINGSHINE", ja: "廬陵昱西", ko: "루링샤인" },
   heroSub: { 
     "zh-TW": "景德鎮當代名家柴窯孤品重器", 
@@ -68,7 +77,11 @@ export const uiDictionary: Record<string, Record<LocaleType, string>> = {
     ja: "景徳鎮現代名家柴窯一点物重器", 
     ko: "경덕진 당대 명가 채요 고품 중기" 
   },
-  heroBtn: { "zh-TW": "探索珍藏", "zh-CN": "探索珍藏", en: "Explore Collections", ja: "コレクションを見る", ko: "컬렉션 탐색" }
+  heroBtn: { "zh-TW": "探索珍藏", "zh-CN": "探索珍藏", en: "Explore Collections", ja: "コレクションを見る", ko: "컬렉션 탐색" },
+
+  // 🎯 國際化歸位：全站分頁器控制項核心字典
+  prevPage: { "zh-TW": "← 上一頁", "zh-CN": "← 上一页", en: "← Prev", ja: "← 前のページ", ko: "← 이전" },
+  nextPage: { "zh-TW": "下一頁 →", "zh-CN": "下一页 →", en: "Next →", ja: "次のページ →", ko: "다음 →" }
 }
 
 /**

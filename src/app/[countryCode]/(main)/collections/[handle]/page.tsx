@@ -1,6 +1,8 @@
+// 📁 完整路徑：src/app/[countryCode]/(main)/collections/[handle]/page.tsx
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 
+// 🛡️ 核心：確保 getCollectionByHandle 與 listCollections 完美導入
 import { getCollectionByHandle, listCollections } from "@lib/data/collections"
 import { listRegions } from "@lib/data/regions"
 import { StoreCollection, StoreRegion } from "@medusajs/types"
@@ -14,8 +16,6 @@ type Props = {
     sortBy?: SortOptions
   }>
 }
-
-export const PRODUCT_LIMIT = 12
 
 export async function generateStaticParams() {
   const { collections } = await listCollections({
@@ -59,7 +59,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 
   const metadata = {
-    title: `${collection.title} | Medusa Store`,
+    title: `${collection.title} | LULINGSHINE`,
     description: `${collection.title} collection`,
   } as Metadata
 
@@ -71,6 +71,7 @@ export default async function CollectionPage(props: Props) {
   const params = await props.params
   const { sortBy, page } = searchParams
 
+  // 🎯 這裡會完美調用上面 import 進來的 getCollectionByHandle 函數
   const collection = await getCollectionByHandle(params.handle).then(
     (collection: StoreCollection) => collection
   )
